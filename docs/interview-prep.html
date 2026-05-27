@@ -867,7 +867,38 @@ softDelete() 시:
         <div class="qa-a"><p>세 가지를 꼽겠습니다. 첫째, <span class="point">임시 비밀번호 방식을 UUID 토큰 + 만료시간 DB 저장 방식의 일회용 링크로 교체</span>해 보안을 강화하고 싶습니다. 둘째, 상세 조회마다 발생하는 조회수 UPDATE를 <span class="point">Redis로 버퍼링 후 배치 반영</span>해 DB 부하를 줄이고 싶습니다. 셋째, 시간 부족으로 구현 못한 <span class="point">OAuth2 소셜 로그인(Google·Kakao)</span>을 Spring Security OAuth2 Client로 추가하고 싶습니다.</p></div>
       </div>
 
-      <!-- ── Q12~Q50 추가 ── -->
+      <div class="qa-item">
+        <div class="qa-q" onclick="toggle(this)">
+          <div class="qa-q-left"><span class="badge badge-blue">JWT</span> Access Token과 Refresh Token의 역할 차이는 뭔가요?</div>
+          <span class="qa-arrow">▶</span>
+        </div>
+        <div class="qa-a"><p><code>TokenProvider.issueAccessToken()</code>은 만료 <span class="point">30분짜리</span>로 매 API 요청 헤더에 담아 보냅니다. <code>issueRefreshToken()</code>은 만료 <span class="point">14일짜리</span>로 Access Token이 만료됐을 때 재발급받는 용도입니다. Access Token을 짧게 유지해 탈취 위험을 줄이고, Refresh Token을 길게 유지해 사용자 재로그인 빈도를 낮춥니다.</p></div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-q" onclick="toggle(this)">
+          <div class="qa-q-left"><span class="badge badge-blue">JWT</span> 로그아웃을 어떻게 구현했나요?</div>
+          <span class="qa-arrow">▶</span>
+        </div>
+        <div class="qa-a"><p><code>AuthController.logout()</code>에서 <code>Authorization</code> 헤더의 Access Token을 받아 <span class="point">TokenProvider.validateAndExtractClaims(token, "access")</span>로 검증 후 userId를 추출합니다. <code>userRepository.findById(userId)</code>로 유저를 조회해 <code>user.setRefreshToken(null)</code>을 호출하고 save합니다. 이후 클라이언트가 <code>/api/auth/refresh</code>를 요청하면 DB에 null이 저장되어 있어 거부됩니다.</p></div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-q" onclick="toggle(this)">
+          <div class="qa-q-left"><span class="badge badge-blue">JWT</span> JwtAuthenticationFilter는 어떻게 동작하나요?</div>
+          <span class="qa-arrow">▶</span>
+        </div>
+        <div class="qa-a"><p><span class="point">OncePerRequestFilter</span>를 상속해 모든 요청에 한 번씩 실행됩니다. <code>Authorization</code> 헤더에서 <code>"Bearer "</code> 뒤 토큰을 추출해 <code>TokenProvider.validateAndExtractClaims(token, "access")</code>를 호출합니다. 유효하면 <code>UsernamePasswordAuthenticationToken(userId, null, authorities)</code>를 생성해 <code>SecurityContextHolder</code>에 저장합니다. <code>/api/auth/refresh</code> 경로는 Access Token 검증에서 제외했습니다.</p></div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-q" onclick="toggle(this)">
+          <div class="qa-q-left"><span class="badge badge-blue">JWT</span> Access Token이 만료됐을 때 클라이언트는 어떻게 처리하나요?</div>
+          <span class="qa-arrow">▶</span>
+        </div>
+        <div class="qa-a"><p>서버는 <code>TokenProvider.validateAndExtractClaims()</code>에서 <span class="point">ExpiredJwtException이 발생하면 null을 반환</span>하고, 인증 필요 API는 401을 응답합니다. 클라이언트는 401을 받으면 저장해둔 Refresh Token을 담아 <code>POST /api/auth/refresh</code>를 호출합니다. 성공하면 새 Access + Refresh Token을 저장하고 원래 요청을 재시도하도록 프론트엔드와 합의해 설계했습니다.</p></div>
+      </div>
+
       <div style="margin-top:20px;padding-bottom:6px;border-bottom:1px solid var(--border);color:var(--muted);font-size:13px;letter-spacing:.5px;text-transform:uppercase">Spring Security</div>
 
       <div class="qa-item">
@@ -908,6 +939,22 @@ softDelete() 시:
           <span class="qa-arrow">▶</span>
         </div>
         <div class="qa-a"><p>HS512는 HMAC-SHA512 방식으로 <span class="point">서버 하나의 비밀키로 서명과 검증을 모두 수행</span>합니다. RS256 같은 비대칭 알고리즘은 공개키/개인키 쌍이 필요해 단일 서버 구조에서는 불필요한 복잡성이 생깁니다. 단일 서버 구조에서는 HS512가 구현이 간단하면서도 충분히 안전합니다.</p></div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-q" onclick="toggle(this)">
+          <div class="qa-q-left"><span class="badge badge-blue">Security</span> SecurityContextHolder는 무엇인가요?</div>
+          <span class="qa-arrow">▶</span>
+        </div>
+        <div class="qa-a"><p>현재 요청 스레드의 인증 정보를 보관하는 컨텍스트입니다. <code>JwtAuthenticationFilter</code>에서 토큰 검증 후 <span class="point">SecurityContextHolder.getContext().setAuthentication(authentication)</span>으로 저장합니다. 이후 같은 요청 내 어느 레이어에서든 <code>getAuthentication()</code>으로 꺼낼 수 있어, 리뷰 수정/삭제 시 <code>ROLE_ADMIN</code> 확인에 활용했습니다.</p></div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-q" onclick="toggle(this)">
+          <div class="qa-q-left"><span class="badge badge-blue">Security</span> CORS를 어떻게 설정했나요?</div>
+          <span class="qa-arrow">▶</span>
+        </div>
+        <div class="qa-a"><p><code>SecurityConfig.corsConfigurationSource()</code>에서 허용 Origin을 <span class="point">"*"(와일드카드)</span>, 허용 메서드를 <code>GET/POST/PUT/DELETE/PATCH/OPTIONS</code>로 설정했습니다. <code>setAllowCredentials(true)</code>로 쿠키·인증 헤더를 허용했습니다. 현재는 개발 편의상 와일드카드를 썼지만 실서비스에서는 프론트엔드 도메인으로 제한해야 한다는 점을 인지하고 있습니다.</p></div>
       </div>
 
       <div style="margin-top:20px;padding-bottom:6px;border-bottom:1px solid var(--border);color:var(--muted);font-size:13px;letter-spacing:.5px;text-transform:uppercase">JPA / Hibernate</div>
@@ -960,6 +1007,14 @@ softDelete() 시:
         <div class="qa-a"><p>@Async 메서드는 별도 스레드에서 실행되므로 <span class="point">호출자의 트랜잭션에 참여하지 않습니다.</span> synchronizeCafe()에 @Transactional을 별도로 선언한 이유입니다. 또한 @Async는 Spring AOP 프록시를 통해야 작동하므로 <span class="point">반드시 public 메서드</span>여야 하고, 같은 클래스 내부에서 직접 호출하면 프록시를 우회해 동기로 실행됩니다.</p></div>
       </div>
 
+      <div class="qa-item">
+        <div class="qa-q" onclick="toggle(this)">
+          <div class="qa-q-left"><span class="badge badge-purple">JPA</span> Builder 패턴을 Entity에서 사용한 이유는?</div>
+          <span class="qa-arrow">▶</span>
+        </div>
+        <div class="qa-a"><p>Lombok의 <span class="point">@Builder</span>를 붙여 <code>UserEntity.builder().name().email().password().build()</code> 방식으로 생성했습니다. 생성자 파라미터 순서를 외울 필요 없이 필드 이름으로 값을 지정하므로 가독성이 높고 실수가 줄어듭니다. <code>AuthService.signUp()</code>에서 회원가입 시 빌더로 Entity를 생성하는 코드가 그 예시입니다.</p></div>
+      </div>
+
       <div style="margin-top:20px;padding-bottom:6px;border-bottom:1px solid var(--border);color:var(--muted);font-size:13px;letter-spacing:.5px;text-transform:uppercase">DB 설계</div>
 
       <div class="qa-item">
@@ -1000,6 +1055,22 @@ softDelete() 시:
           <span class="qa-arrow">▶</span>
         </div>
         <div class="qa-a"><p>WishlistService.toggle()에서 <code>em.getReference()</code>로 프록시를 생성하다가 존재하지 않는 cafeId면 저장 시점에 <span class="point">DataIntegrityViolationException</span>이 발생합니다. 이를 try-catch로 잡아 클라이언트에 400 에러를 반환했습니다. GlobalExceptionHandler에서도 공통으로 처리해 예외별 적절한 HTTP 상태코드가 반환되도록 했습니다.</p></div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-q" onclick="toggle(this)">
+          <div class="qa-q-left"><span class="badge badge-orange">DB</span> Wishlist에 UNIQUE(user_id, cafe_id, category)를 설정한 이유는?</div>
+          <span class="qa-arrow">▶</span>
+        </div>
+        <div class="qa-a"><p>같은 사용자가 같은 카페를 같은 카테고리로 <span class="point">중복 저장하는 것을 DB 레벨에서 방지</span>합니다. 단 같은 카페라도 다른 카테고리(예: WORK, ATMOSPHERE)로는 저장 가능하도록 복합 UNIQUE를 설계했습니다. 애플리케이션 레벨의 중복 체크만으로는 동시 요청 시 Race Condition이 발생할 수 있어 DB 제약조건으로 보완했습니다.</p></div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-q" onclick="toggle(this)">
+          <div class="qa-q-left"><span class="badge badge-orange">DB</span> avgRating은 어떻게 갱신하나요?</div>
+          <span class="qa-arrow">▶</span>
+        </div>
+        <div class="qa-a"><p>리뷰 작성/수정/삭제 이벤트 시 <span class="point">ReviewRepository.findByCafe_CafeId(cafeId)</span>로 전체 리뷰를 조회해 평균을 계산하고 <code>CafeEntity.avgRating</code>을 직접 업데이트합니다. 개선 방향으로는 DB의 <code>AVG()</code> 집계 쿼리를 사용하거나, 리뷰 수와 합계를 별도 컬럼에 유지하는 증분 업데이트 방식이 더 효율적입니다.</p></div>
       </div>
 
       <div style="margin-top:20px;padding-bottom:6px;border-bottom:1px solid var(--border);color:var(--muted);font-size:13px;letter-spacing:.5px;text-transform:uppercase">API 설계 / 외부 연동</div>
@@ -1044,6 +1115,14 @@ softDelete() 시:
         <div class="qa-a"><p>모든 API 응답을 <span class="point">{"message": "...", "data": {...}}</span> 형태로 통일했습니다. 프론트엔드가 응답 형식을 예측할 수 있고, 에러 시에도 같은 구조로 메시지를 전달할 수 있습니다. <code>ApiResponse.&lt;T&gt;builder().message("로그인 성공").data(dto).build()</code> 방식으로 일관되게 사용했습니다.</p></div>
       </div>
 
+      <div class="qa-item">
+        <div class="qa-q" onclick="toggle(this)">
+          <div class="qa-q-left"><span class="badge badge-green">API</span> Swagger를 도입한 이유는?</div>
+          <span class="qa-arrow">▶</span>
+        </div>
+        <div class="qa-a"><p><code>springdoc-openapi-starter-webmvc-ui</code>를 의존성에 추가해 <span class="point">http://localhost:8080/api-docs</span>에서 API 문서를 확인할 수 있습니다. 프론트엔드 팀과 API 명세를 공유할 때 별도 문서 작성 없이 Swagger UI에서 직접 테스트할 수 있어 협업 효율이 높아졌습니다. Controller에 <code>@Operation</code>, <code>@ApiResponse</code>로 요청/응답 예시를 직접 작성했습니다.</p></div>
+      </div>
+
       <div style="margin-top:20px;padding-bottom:6px;border-bottom:1px solid var(--border);color:var(--muted);font-size:13px;letter-spacing:.5px;text-transform:uppercase">성능 최적화</div>
 
       <div class="qa-item">
@@ -1068,6 +1147,14 @@ softDelete() 시:
           <span class="qa-arrow">▶</span>
         </div>
         <div class="qa-a"><p><span class="point">@Scheduled(cron = "0 0 3 * * *")</span>로 매일 새벽 3시에 실행됩니다. <code>views_last7d = viewCount - lastViewCount</code>를 계산하고 <code>lastViewCount = viewCount</code>로 기준점을 업데이트합니다. 결과적으로 views_last7d는 항상 최근 7일간의 증분 조회수를 나타내 Hot Score 계산에 활용됩니다. CafeOnApplication에 @EnableScheduling을 선언했습니다.</p></div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-q" onclick="toggle(this)">
+          <div class="qa-q-left"><span class="badge badge-yellow">성능</span> 카카오 API 검색 성능은 어떻게 최적화했나요?</div>
+          <span class="qa-arrow">▶</span>
+        </div>
+        <div class="qa-a"><p>세 가지를 적용했습니다. 첫째, 카카오 API는 최대 45페이지를 조회할 수 있지만 <span class="point">검색 목록에서는 첫 페이지 15개만 가져옵니다</span>(<code>size=15, page=1</code>). 둘째, <code>UriComponentsBuilder.encode(StandardCharsets.UTF_8)</code>로 한글 인코딩을 안전하게 처리했습니다. 셋째, 신규 카페 저장은 <code>@Async</code>로 비동기 처리해 <span class="point">검색 API 응답 속도를 보장</span>했습니다.</p></div>
       </div>
 
       <div style="margin-top:20px;padding-bottom:6px;border-bottom:1px solid var(--border);color:var(--muted);font-size:13px;letter-spacing:.5px;text-transform:uppercase">프로젝트 전반</div>
