@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>cafeOn 면접 준비</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #22263a;
+    --border: #2e3250;
+    --text: #e2e8f0;
+    --muted: #8892a4;
+    --blue: #60a5fa;
+    --green: #34d399;
+    --yellow: #fbbf24;
+    --red: #f87171;
+    --purple: #a78bfa;
+    --orange: #fb923c;
+    --teal: #2dd4bf;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; font-size: 14px; line-height: 1.6; }
+
+  /* 레이아웃 */
+  .layout { display: flex; min-height: 100vh; }
+  nav { width: 220px; background: var(--surface); border-right: 1px solid var(--border); padding: 20px 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; flex-shrink: 0; }
+  nav h2 { padding: 0 16px 12px; font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border); margin-bottom: 8px; }
+  nav a { display: block; padding: 7px 16px; color: var(--muted); text-decoration: none; font-size: 13px; transition: all .15s; border-left: 3px solid transparent; }
+  nav a:hover, nav a.active { color: var(--text); background: var(--surface2); border-left-color: var(--blue); }
+  main { flex: 1; padding: 32px; max-width: 1100px; }
+
+  /* 섹션 */
+  section { margin-bottom: 48px; scroll-margin-top: 24px; }
+  h1 { font-size: 22px; color: var(--blue); margin-bottom: 6px; }
+  h2.section-title { font-size: 18px; color: var(--text); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+  h3 { font-size: 14px; color: var(--yellow); margin: 16px 0 8px; }
+  .subtitle { color: var(--muted); font-size: 13px; margin-bottom: 24px; }
+
+  /* 카드 그리드 */
+  .grid { display: grid; gap: 12px; }
+  .grid-2 { grid-template-columns: repeat(2, 1fr); }
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .grid-4 { grid-template-columns: repeat(4, 1fr); }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
+  .card-title { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; }
+  .card-value { font-size: 15px; color: var(--text); font-weight: 600; }
+  .card-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+  /* 배지 */
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+  .badge-blue { background: rgba(96,165,250,.15); color: var(--blue); }
+  .badge-green { background: rgba(52,211,153,.15); color: var(--green); }
+  .badge-yellow { background: rgba(251,191,36,.15); color: var(--yellow); }
+  .badge-red { background: rgba(248,113,113,.15); color: var(--red); }
+  .badge-purple { background: rgba(167,139,250,.15); color: var(--purple); }
+  .badge-orange { background: rgba(251,146,60,.15); color: var(--orange); }
+
+  /* 테이블 */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { background: var(--surface2); color: var(--muted); font-weight: 600; text-align: left; padding: 8px 12px; border: 1px solid var(--border); font-size: 11px; text-transform: uppercase; }
+  td { padding: 8px 12px; border: 1px solid var(--border); color: var(--text); vertical-align: top; }
+  tr:nth-child(even) td { background: rgba(255,255,255,.02); }
+  td code { background: var(--surface2); padding: 1px 5px; border-radius: 3px; font-family: monospace; font-size: 12px; color: var(--teal); }
+
+  /* 코드 블록 */
+  pre { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 14px; overflow-x: auto; font-family: 'Consolas', monospace; font-size: 12px; line-height: 1.7; color: #abb2bf; margin: 8px 0; }
+  .kw { color: #c678dd; }  /* 키워드 */
+  .fn { color: #61afef; }  /* 함수 */
+  .str { color: #98c379; } /* 문자열 */
+  .cm { color: #5c6370; }  /* 주석 */
+  .num { color: #d19a66; } /* 숫자 */
+  .anno { color: #e5c07b; } /* 어노테이션 */
+
+  /* Q&A 아코디언 */
+  .qa-item { border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; overflow: hidden; }
+  .qa-q { background: var(--surface); padding: 14px 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: 600; color: var(--text); transition: background .15s; }
+  .qa-q:hover { background: var(--surface2); }
+  .qa-q .tag { font-size: 11px; font-weight: 500; padding: 2px 7px; border-radius: 4px; margin-right: 8px; }
+  .qa-a { background: var(--surface2); padding: 0; max-height: 0; overflow: hidden; transition: all .25s; }
+  .qa-a.open { padding: 14px 16px; max-height: 600px; }
+  .qa-a p { color: var(--muted); line-height: 1.8; }
+  .qa-a .point { color: var(--green); font-weight: 600; }
+  .qa-arrow { color: var(--muted); transition: transform .2s; }
+  .qa-arrow.open { transform: rotate(90deg); }
+
+  /* 흐름도 */
+  .flow { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; margin: 8px 0; }
+  .flow-step { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 6px 12px; font-size: 12px; color: var(--text); }
+  .flow-step.highlight { border-color: var(--blue); color: var(--blue); }
+  .flow-step.success { border-color: var(--green); color: var(--green); }
+  .flow-step.warn { border-color: var(--yellow); color: var(--yellow); }
+  .flow-arrow { color: var(--muted); font-size: 16px; }
+
+  /* 구분선 */
+  hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+
+  /* 경고/팁 박스 */
+  .tip { background: rgba(52,211,153,.07); border-left: 3px solid var(--green); padding: 10px 14px; border-radius: 0 6px 6px 0; margin: 8px 0; font-size: 13px; }
+  .warn-box { background: rgba(251,191,36,.07); border-left: 3px solid var(--yellow); padding: 10px 14px; border-radius: 0 6px 6px 0; margin: 8px 0; font-size: 13px; }
+  .info { background: rgba(96,165,250,.07); border-left: 3px solid var(--blue); padding: 10px 14px; border-radius: 0 6px 6px 0; margin: 8px 0; font-size: 13px; }
+
+  @media (max-width: 900px) {
+    nav { display: none; }
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- 사이드바 -->
+<nav>
+  <h2>cafeOn 면접</h2>
+  <a href="#overview">프로젝트 개요</a>
+  <a href="#stack">기술 스택</a>
+  <a href="#my-domain">내 담당 도메인</a>
+  <a href="#jwt">JWT 인증 심화</a>
+  <a href="#kakao">카카오 API 병합</a>
+  <a href="#review">리뷰 시스템</a>
+  <a href="#wishlist">위시리스트</a>
+  <a href="#patterns">공통 패턴</a>
+  <a href="#qa">면접 Q&A</a>
+</nav>
+
+<main>
+
+<!-- 헤더 -->
+<section id="overview">
+  <h1>☕ cafeOn 백엔드 면접 준비</h1>
+  <p class="subtitle">카페 정보 검색 + 커뮤니티 + 실시간 채팅 플랫폼 · Spring Boot 3.5.6 · Java 17</p>
+
+  <div class="grid grid-4" style="margin-bottom:16px">
+    <div class="card">
+      <div class="card-title">담당 역할</div>
+      <div class="card-value">백엔드 개발</div>
+      <div class="card-sub">팀원 3명 중 1명</div>
+    </div>
+    <div class="card">
+      <div class="card-title">담당 도메인</div>
+      <div class="card-value">4개 도메인</div>
+      <div class="card-sub">User · Cafe · Review · Wishlist</div>
+    </div>
+    <div class="card">
+      <div class="card-title">구현 API 수</div>
+      <div class="card-value">20+ 개</div>
+      <div class="card-sub">인증 6 + 카페 7 + 리뷰 4 + 찜 4</div>
+    </div>
+    <div class="card">
+      <div class="card-title">외부 연동</div>
+      <div class="card-value">3가지</div>
+      <div class="card-sub">카카오맵 · AWS S3 · Gmail SMTP</div>
+    </div>
+  </div>
+
+  <div class="tip">
+    💡 <strong>한 줄 소개:</strong> "카페 검색·리뷰·커뮤니티·실시간채팅을 통합한 카페 전용 소셜 플랫폼의 백엔드를 담당했고, JWT 인증·카카오맵 연동·리뷰 시스템을 구현했습니다."
+  </div>
+</section>
+
+<!-- 기술 스택 -->
+<section id="stack">
+  <h2 class="section-title">🛠 기술 스택</h2>
+  <div class="grid grid-3">
+    <div class="card">
+      <div class="card-title">Core</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px">
+        <span class="badge badge-blue">Spring Boot 3.5.6</span>
+        <span class="badge badge-blue">Java 17</span>
+        <span class="badge badge-blue">Spring Data JPA</span>
+        <span class="badge badge-blue">Spring Security</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">인프라 / 저장</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px">
+        <span class="badge badge-orange">MySQL (AWS RDS)</span>
+        <span class="badge badge-orange">AWS S3 SDK v2</span>
+        <span class="badge badge-orange">AWS EC2</span>
+        <span class="badge badge-orange">Docker + Nginx</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">통신 / 기타</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px">
+        <span class="badge badge-purple">JWT (jjwt 0.9.1)</span>
+        <span class="badge badge-purple">WebSocket STOMP</span>
+        <span class="badge badge-green">카카오맵 REST API</span>
+        <span class="badge badge-green">Gmail SMTP</span>
+        <span class="badge badge-yellow">Swagger OpenAPI 3</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 내 담당 도메인 -->
+<section id="my-domain">
+  <h2 class="section-title">📋 내 담당 도메인 API 목록</h2>
+
+  <h3>인증 (User)</h3>
+  <table>
+    <thead><tr><th>Method</th><th>API</th><th>기능</th><th>인증</th><th>핵심 포인트</th></tr></thead>
+    <tbody>
+      <tr><td><span class="badge badge-green">POST</span></td><td><code>/api/auth/signup</code></td><td>회원가입</td><td><span class="badge badge-blue">없음</span></td><td>UUID 생성, BCrypt 암호화, 이메일 중복 체크</td></tr>
+      <tr><td><span class="badge badge-green">POST</span></td><td><code>/api/auth/login</code></td><td>로그인</td><td><span class="badge badge-blue">없음</span></td><td>PasswordEncoder.matches() → Access(30분)+Refresh(14일) 발급 → DB 저장</td></tr>
+      <tr><td><span class="badge badge-green">POST</span></td><td><code>/api/auth/refresh</code></td><td>토큰 갱신</td><td><span class="badge badge-yellow">Refresh</span></td><td>Token Rotation — 새 쌍 발급 + DB의 이전 토큰 무효화</td></tr>
+      <tr><td><span class="badge badge-green">POST</span></td><td><code>/api/auth/logout</code></td><td>로그아웃</td><td><span class="badge badge-purple">Access</span></td><td>DB의 refresh_token → null 처리</td></tr>
+      <tr><td><span class="badge badge-yellow">PUT</span></td><td><code>/api/auth/password</code></td><td>비밀번호 변경</td><td><span class="badge badge-purple">Access</span></td><td>기존 PW 검증 후 새 PW BCrypt 암호화 저장</td></tr>
+      <tr><td><span class="badge badge-green">POST</span></td><td><code>/api/auth/password/reset</code></td><td>임시 PW 발급</td><td><span class="badge badge-blue">없음</span></td><td>10자리 랜덤 생성 → 암호화 저장 → Gmail 발송</td></tr>
+    </tbody>
+  </table>
+
+  <h3>카페 (Cafe)</h3>
+  <table>
+    <thead><tr><th>Method</th><th>API</th><th>기능</th><th>핵심 기술</th></tr></thead>
+    <tbody>
+      <tr><td><span class="badge badge-blue">GET</span></td><td><code>/api/cafes/search</code></td><td>키워드/태그 검색</td><td>카카오 API + DB 병합, @Async 비동기 저장, N+1 해결</td></tr>
+      <tr><td><span class="badge badge-blue">GET</span></td><td><code>/api/cafes/{id}</code></td><td>상세 조회</td><td>조회수 +1, 리뷰·태그 조회</td></tr>
+      <tr><td><span class="badge badge-blue">GET</span></td><td><code>/api/cafes/nearby</code></td><td>근처 카페</td><td>MySQL ST_Distance_Sphere (하버사인), 카카오 보조 호출</td></tr>
+      <tr><td><span class="badge badge-blue">GET</span></td><td><code>/api/cafes/random10</code></td><td>랜덤 10개</td><td>ORDER BY RAND() LIMIT 10</td></tr>
+      <tr><td><span class="badge badge-blue">GET</span></td><td><code>/api/cafes/hot10</code></td><td>인기 카페</td><td>가중치 공식 Hot Score (조회수·평점·찜·리뷰 수)</td></tr>
+      <tr><td><span class="badge badge-blue">GET</span></td><td><code>/api/cafes/wish10</code></td><td>찜 많은 카페</td><td>wishlists JOIN GROUP BY COUNT(*)</td></tr>
+      <tr><td><span class="badge badge-blue">GET</span></td><td><code>/api/cafes/{id}/reviews</code></td><td>카페별 리뷰</td><td>reviews + count 반환</td></tr>
+    </tbody>
+  </table>
+
+  <h3>리뷰 / 위시리스트</h3>
+  <div class="grid grid-2">
+    <table>
+      <thead><tr><th>Method</th><th>API</th><th>기능</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge badge-green">POST</span></td><td><code>/api/cafes/{id}/reviews</code></td><td>리뷰 작성 (multipart)</td></tr>
+        <tr><td><span class="badge badge-yellow">PUT</span></td><td><code>/api/reviews/{id}</code></td><td>리뷰 수정 (권한 검증)</td></tr>
+        <tr><td><span class="badge badge-red">DELETE</span></td><td><code>/api/reviews/{id}</code></td><td>리뷰 삭제</td></tr>
+        <tr><td><span class="badge badge-blue">GET</span></td><td><code>/api/my/reviews</code></td><td>내 리뷰 목록</td></tr>
+      </tbody>
+    </table>
+    <table>
+      <thead><tr><th>Method</th><th>API</th><th>기능</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge badge-green">POST</span></td><td><code>/api/my/wishlist/{cafeId}</code></td><td>찜 토글</td></tr>
+        <tr><td><span class="badge badge-red">DELETE</span></td><td><code>/api/my/wishlist/{cafeId}</code></td><td>카테고리별 제거</td></tr>
+        <tr><td><span class="badge badge-blue">GET</span></td><td><code>/api/my/wishlist</code></td><td>찜 목록 조회</td></tr>
+        <tr><td><span class="badge badge-blue">GET</span></td><td><code>/api/my/wishlist/{cafeId}</code></td><td>카테고리 확인</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- JWT 심화 -->
+<section id="jwt">
+  <h2 class="section-title">🔐 JWT 인증 시스템</h2>
+
+  <div class="grid grid-2" style="margin-bottom:16px">
+    <div class="card">
+      <div class="card-title">Access Token</div>
+      <div class="card-value" style="color:var(--blue)">30분 만료</div>
+      <div class="card-sub" style="margin-top:8px">알고리즘: HS512<br>클레임: sub(userId), iss(cafeOn), tokenType(access), role</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Refresh Token</div>
+      <div class="card-value" style="color:var(--purple)">14일 만료</div>
+      <div class="card-sub" style="margin-top:8px">알고리즘: HS512<br>DB 저장: users.refresh_token 컬럼<br>Token Rotation 전략 적용</div>
+    </div>
+  </div>
+
+  <h3>로그인 흐름</h3>
+  <div class="flow">
+    <div class="flow-step">POST /login</div><div class="flow-arrow">→</div>
+    <div class="flow-step highlight">findByEmail()</div><div class="flow-arrow">→</div>
+    <div class="flow-step highlight">encoder.matches()</div><div class="flow-arrow">→</div>
+    <div class="flow-step">issueTokens()</div><div class="flow-arrow">→</div>
+    <div class="flow-step warn">DB에 Refresh 저장</div><div class="flow-arrow">→</div>
+    <div class="flow-step success">{token, refreshToken}</div>
+  </div>
+
+  <h3>요청 인증 흐름 (매 요청마다)</h3>
+  <div class="flow">
+    <div class="flow-step">HTTP 요청</div><div class="flow-arrow">→</div>
+    <div class="flow-step highlight">JwtAuthenticationFilter</div><div class="flow-arrow">→</div>
+    <div class="flow-step">Bearer 추출</div><div class="flow-arrow">→</div>
+    <div class="flow-step highlight">validateAndExtractClaims()</div><div class="flow-arrow">→</div>
+    <div class="flow-step success">SecurityContext 저장</div><div class="flow-arrow">→</div>
+    <div class="flow-step">@AuthenticationPrincipal</div>
+  </div>
+
+  <h3>Token Rotation (갱신) 흐름</h3>
+  <div class="flow" style="flex-wrap:wrap">
+    <div class="flow-step">POST /refresh {refreshToken}</div><div class="flow-arrow">→</div>
+    <div class="flow-step highlight">JWT 서명 검증</div><div class="flow-arrow">→</div>
+    <div class="flow-step warn">DB 값과 비교</div><div class="flow-arrow">→</div>
+    <div class="flow-step">새 Access+Refresh 발급</div><div class="flow-arrow">→</div>
+    <div class="flow-step warn">새 Refresh DB 저장</div><div class="flow-arrow">→</div>
+    <div class="flow-step success">새 토큰 쌍 반환</div>
+  </div>
+
+  <div class="info" style="margin-top:12px">
+    🔑 <strong>Token Rotation 핵심:</strong> 갱신할 때마다 Refresh Token을 교체 → 탈취된 토큰으로 재시도하면 DB 값과 다르므로 거부됨
+  </div>
+
+  <h3>핵심 코드 — TokenProvider</h3>
+  <pre><span class="cm">// Access Token 발급 (30분)</span>
+<span class="kw">return</span> Jwts.builder()
+    .signWith(SignatureAlgorithm.HS512, jwtProperties.getSecretKey())
+    .setSubject(userEntity.getUserId())  <span class="cm">// sub: userId</span>
+    .setIssuer(<span class="str">"cafeOn"</span>)
+    .setIssuedAt(<span class="kw">new</span> Date())
+    .setExpiration(Date.from(Instant.now().plus(<span class="num">30</span>, ChronoUnit.MINUTES)))
+    .claim(<span class="str">"tokenType"</span>, <span class="str">"access"</span>)
+    .claim(<span class="str">"role"</span>, userEntity.getRole().name())
+    .compact();</pre>
+
+  <h3>핵심 코드 — 로그아웃 (RefreshToken 무효화)</h3>
+  <pre><span class="kw">public void</span> <span class="fn">logout</span>(String authorizationHeader) {
+    String token = authorizationHeader.substring(<span class="num">7</span>); <span class="cm">// "Bearer " 제거</span>
+    Map claims = tokenProvider.validateAndExtractClaims(token, <span class="str">"access"</span>);
+    String userId = claims.get(<span class="str">"userId"</span>);
+
+    userRepository.findById(userId).ifPresent(user -> {
+        user.setRefreshToken(<span class="kw">null</span>);  <span class="cm">// DB에서 Refresh 제거</span>
+        userRepository.save(user);
+    });
+}</pre>
+</section>
+
+<!-- 카카오 API -->
+<section id="kakao">
+  <h2 class="section-title">🗺 카카오 API 병합 & 카페 검색</h2>
+
+  <h3>검색 전략 — keyword 있을 때</h3>
+  <div class="flow" style="flex-wrap:wrap">
+    <div class="flow-step">keyword 입력</div><div class="flow-arrow">→</div>
+    <div class="flow-step highlight">카카오 API 호출 (15개)</div><div class="flow-arrow">→</div>
+    <div class="flow-step">DB 이름 매칭</div><div class="flow-arrow">→</div>
+    <div class="flow-step success">DB 있음: DB 데이터</div><div class="flow-arrow">+</div>
+    <div class="flow-step warn">DB 없음: 카카오 데이터</div><div class="flow-arrow">+</div>
+    <div class="flow-step">@Async DB 저장</div>
+  </div>
+
+  <h3>검색 전략 — keyword 없을 때</h3>
+  <div class="flow">
+    <div class="flow-step">tag 있음</div><div class="flow-arrow">→</div>
+    <div class="flow-step highlight">findByTag(tag) — JOIN</div>
+    <div class="flow-arrow" style="margin:0 8px">|</div>
+    <div class="flow-step">tag 없음</div><div class="flow-arrow">→</div>
+    <div class="flow-step highlight">findAll()</div>
+  </div>
+
+  <div class="grid grid-2" style="margin-top:16px">
+    <div class="card">
+      <div class="card-title">카카오 API 호출 최적화</div>
+      <div style="margin-top:8px;font-size:13px;color:var(--muted);line-height:1.8">
+        ✅ 첫 페이지 15개만 조회 (전체 45페이지 미조회)<br>
+        ✅ UTF-8 인코딩: UriComponentsBuilder.encode()<br>
+        ✅ 결과 최대 50개 제한<br>
+        ✅ 신규 카페: @Async 비동기 저장 (응답 차단 없음)
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">인기 Hot Score 공식</div>
+      <pre style="margin-top:8px;font-size:11px">HotScore =
+  views_last7d  × w7d
++ viewCount     × wAll
++ avgRating×50  × wRate
++ reviewCount×5 × wRev
+
+→ 가중치 파라미터로 조정 가능</pre>
+    </div>
+  </div>
+
+  <h3>근처 카페 — MySQL 구면거리 계산</h3>
+  <pre><span class="cm">-- MySQL ST_Distance_Sphere: 하버사인 공식 기반 구면 거리</span>
+ST_Distance_Sphere(
+    POINT(longitude, latitude),
+    POINT(:lon, :lat)
+) &lt;= :radius
+ORDER BY distance ASC
+LIMIT <span class="num">100</span>
+
+<span class="cm">-- DB 결과 < 10개이면 카카오 Category API (CE7=카페)로 보완</span></pre>
+
+  <h3>조회수 관리 전략</h3>
+  <table>
+    <thead><tr><th>컬럼</th><th>언제 증가</th><th>관리 방식</th></tr></thead>
+    <tbody>
+      <tr><td><code>view_count</code></td><td>상세 조회 API 호출 시마다 +1</td><td>실시간</td></tr>
+      <tr><td><code>views_last7d</code></td><td>매일 새벽 3시 배치</td><td>CafeScheduler @Scheduled</td></tr>
+      <tr><td><code>last_view_count</code></td><td>배치 시점 기준점 저장</td><td>views_last7d = viewCount - lastViewCount</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- 리뷰 -->
+<section id="review">
+  <h2 class="section-title">⭐ 리뷰 시스템</h2>
+
+  <div class="grid grid-2">
+    <div>
+      <h3>Entity 구조</h3>
+      <pre><span class="anno">@Entity</span>
+ReviewEntity {
+  reviewId   <span class="cm">// BIGINT AUTO_INCREMENT</span>
+  rating     <span class="cm">// INT, @Min(1) @Max(5)</span>
+  content    <span class="cm">// TEXT</span>
+  createdAt  <span class="cm">// @PrePersist 자동 설정</span>
+  user       <span class="cm">// ManyToOne LAZY</span>
+  cafe       <span class="cm">// ManyToOne LAZY</span>
+  images     <span class="cm">// OneToMany cascade=ALL</span>
+             <span class="cm">// orphanRemoval=true</span>
+}</pre>
+    </div>
+    <div>
+      <h3>리뷰 작성 (multipart/form-data)</h3>
+      <pre>Content-Type: multipart/form-data
+  ├─ review: {"rating":5,"content":"좋아요"}
+  └─ images: [파일1, 파일2] (선택)
+
+Controller:
+  ObjectMapper.readValue(reviewJson, DTO.class)
+
+Service:
+  ReviewEntity 생성 + save()
+  S3Service.uploadImage(files)
+  ImageEntity 연결 → DB 저장</pre>
+      <div class="warn-box">⚠️ orphanRemoval=true: 이미지 리스트에서 제거하면 자동 삭제되지만, S3에서도 반드시 별도 삭제 필요</div>
+    </div>
+  </div>
+
+  <h3>권한 검증 (수정/삭제)</h3>
+  <pre><span class="cm">// 작성자 OR 관리자만 허용</span>
+<span class="kw">boolean</span> isOwner = review.getUser().getUserId().equals(userId);
+<span class="kw">boolean</span> isAdmin = SecurityContextHolder.getContext()
+    .getAuthentication().getAuthorities().stream()
+    .anyMatch(a -> a.getAuthority().equals(<span class="str">"ROLE_ADMIN"</span>));
+
+<span class="kw">if</span> (!isOwner && !isAdmin) <span class="kw">throw new</span> ForbiddenException();</pre>
+</section>
+
+<!-- 위시리스트 -->
+<section id="wishlist">
+  <h2 class="section-title">🔖 위시리스트 시스템</h2>
+
+  <div class="grid grid-2">
+    <div>
+      <h3>카테고리 Enum</h3>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px">
+        <span class="badge badge-purple">HIDEOUT 나만의 아지트</span>
+        <span class="badge badge-blue">WORK 작업하기 좋은</span>
+        <span class="badge badge-orange">ATMOSPHERE 분위기</span>
+        <span class="badge badge-yellow">TASTE 맛집</span>
+        <span class="badge badge-green">PLANNED 방문 예정</span>
+      </div>
+      <div class="info" style="margin-top:12px">같은 카페를 여러 카테고리에 저장 가능<br>같은 카페+카테고리 조합은 중복 불가<br><code>UNIQUE (user_id, cafe_id, category)</code></div>
+    </div>
+    <div>
+      <h3>찜 토글 핵심 최적화</h3>
+      <pre><span class="cm">// em.getReference() — 프록시만 생성, DB 조회 안 함</span>
+CafeEntity cafeRef = em.getReference(
+    CafeEntity.class, cafeId
+);
+<span class="cm">// FK 참조만 필요하므로 실제 카페 데이터 조회 불필요</span>
+<span class="cm">// DB 쿼리 1번 절약</span>
+
+<span class="cm">// 토글 로직</span>
+<span class="kw">if</span> (existsByKey(userId, cafeId, category)) {
+    repository.delete();   <span class="cm">// wished: false</span>
+} <span class="kw">else</span> {
+    repository.save();     <span class="cm">// wished: true</span>
+}</pre>
+    </div>
+  </div>
+</section>
+
+<!-- 공통 패턴 -->
+<section id="patterns">
+  <h2 class="section-title">🏗 공통 아키텍처 패턴</h2>
+
+  <div class="grid grid-2">
+    <div class="card">
+      <div class="card-title">N+1 문제 해결</div>
+      <pre style="margin-top:8px;font-size:11px"><span class="cm">// 나쁜 예: 100개 카페 × 태그 쿼리 = 101번</span>
+cafes.forEach(cafe -> cafe.getTags()); <span class="cm">// ❌</span>
+
+<span class="cm">// 좋은 예: IN 쿼리 1번으로 해결</span>
+List&lt;Object[]&gt; rows =
+  cafeRepo.findTagNamesByCafeIds(cafeIds); <span class="cm">// ✅</span>
+
+Map&lt;Long, List&lt;String&gt;&gt; tagsMap = new HashMap&lt;&gt;();
+rows.forEach(row -> tagsMap
+    .computeIfAbsent(cafeId, k->new ArrayList&lt;&gt;())
+    .add(tagName));</pre>
+    </div>
+    <div class="card">
+      <div class="card-title">표준 응답 형식</div>
+      <pre style="margin-top:8px;font-size:11px"><span class="cm">// ApiResponse&lt;T&gt; 래퍼</span>
+{
+  "message": <span class="str">"로그인 성공"</span>,
+  "data": {
+    "token": <span class="str">"eyJ..."</span>,
+    "refreshToken": <span class="str">"eyJ..."</span>
+  }
+}
+
+<span class="cm">// 에러도 동일 형식</span>
+{
+  "message": <span class="str">"이메일 또는 비밀번호가 틀렸습니다"</span>,
+  "data": <span class="kw">null</span>
+}</pre>
+    </div>
+    <div class="card">
+      <div class="card-title">Soft Delete (UserEntity)</div>
+      <pre style="margin-top:8px;font-size:11px"><span class="anno">@SQLDelete</span>(sql =
+  <span class="str">"UPDATE users SET deleted_at=NOW() WHERE user_id=?"</span>)
+<span class="anno">@Where</span>(clause = <span class="str">"deleted_at IS NULL"</span>)
+
+<span class="cm">// softDelete() 호출 시:</span>
+user.setDeletedAt(LocalDateTime.now());
+user.setStatus(DELETED);
+user.setRefreshToken(<span class="kw">null</span>);
+user.setNickname(<span class="str">"탈퇴회원"</span>); <span class="cm">// 게시글에 표시</span></pre>
+    </div>
+    <div class="card">
+      <div class="card-title">@Async 비동기 처리</div>
+      <pre style="margin-top:8px;font-size:11px"><span class="cm">// 신규 카페 저장은 검색 응답과 별개로 처리</span>
+<span class="anno">@Async</span>
+<span class="anno">@Transactional</span>
+<span class="kw">public void</span> <span class="fn">synchronizeCafe</span>(Map doc, String kakaoId) {
+    <span class="kw">if</span> (!repo.existsByKakaoId(kakaoId)) {
+        repo.save(parseKakaoDocToEntity(doc));
+    }
+}
+<span class="cm">// ⚠️ @Async는 public 메서드만 프록시 동작</span></pre>
+    </div>
+  </div>
+
+  <h3>요청 처리 전체 흐름</h3>
+  <div class="flow" style="flex-wrap:wrap">
+    <div class="flow-step">HTTP 요청</div><div class="flow-arrow">→</div>
+    <div class="flow-step highlight">JwtAuthenticationFilter</div><div class="flow-arrow">→</div>
+    <div class="flow-step highlight">SecurityConfig (권한 체크)</div><div class="flow-arrow">→</div>
+    <div class="flow-step">@RestController</div><div class="flow-arrow">→</div>
+    <div class="flow-step">@Service @Transactional</div><div class="flow-arrow">→</div>
+    <div class="flow-step">JpaRepository</div><div class="flow-arrow">→</div>
+    <div class="flow-step success">MySQL</div>
+  </div>
+</section>
+
+<!-- Q&A -->
+<section id="qa">
+  <h2 class="section-title">💬 면접 예상 Q&A</h2>
+  <p style="color:var(--muted);font-size:13px;margin-bottom:16px">▶ 클릭해서 답변 확인</p>
+
+  <div class="qa-item">
+    <div class="qa-q" onclick="toggle(this)">
+      <span><span class="tag badge-blue badge">JWT</span> JWT를 사용한 이유가 뭔가요?</span>
+      <span class="qa-arrow">▶</span>
+    </div>
+    <div class="qa-a">
+      <p>세션 방식은 서버에 상태를 저장해서 <span class="point">서버가 여러 대일 때 세션 동기화 문제</span>가 생깁니다. JWT는 토큰 자체에 사용자 정보를 담아 서버가 무상태(Stateless)로 동작할 수 있어 수평 확장에 유리합니다. AWS EC2에 배포하고 이후 스케일아웃을 고려해 JWT를 선택했습니다.</p>
+    </div>
+  </div>
+
+  <div class="qa-item">
+    <div class="qa-q" onclick="toggle(this)">
+      <span><span class="tag badge-blue badge">JWT</span> Refresh Token을 DB에 저장하는 이유가 뭔가요?</span>
+      <span class="qa-arrow">▶</span>
+    </div>
+    <div class="qa-a">
+      <p>DB에 저장하지 않으면 <span class="point">토큰이 탈취됐을 때 서버에서 무효화할 방법이 없습니다.</span> 로그아웃 시 DB의 refresh_token을 null로 만들면 이후 갱신 요청을 모두 거부할 수 있습니다. 또한 Token Rotation 전략으로 갱신할 때마다 새 Refresh Token으로 교체해 탈취된 토큰 재사용을 방지했습니다.</p>
+    </div>
+  </div>
+
+  <div class="qa-item">
+    <div class="qa-q" onclick="toggle(this)">
+      <span><span class="tag badge-blue badge">JWT</span> Token Rotation이 무엇이고 왜 적용했나요?</span>
+      <span class="qa-arrow">▶</span>
+    </div>
+    <div class="qa-a">
+      <p>Refresh Token을 한 번 사용하면 새로운 Refresh Token으로 교체하는 전략입니다. <span class="point">탈취된 토큰 감지</span>가 가능합니다. 정상 사용자가 먼저 갱신하면 DB 값이 바뀌고, 공격자가 이전 토큰으로 재시도하면 DB 값과 달라 거부됩니다. 코드에서는 갱신 시 DB의 Refresh Token 값과 요청값을 비교하고, 일치할 때만 새 쌍을 발급합니다.</p>
+    </div>
+  </div>
+
+  <div class="qa-item">
+    <div class="qa-q" onclick="toggle(this)">
+      <span><span class="tag badge-green badge">카카오</span> 카카오 API 결과를 DB와 병합한 이유는요?</span>
+      <span class="qa-arrow">▶</span>
+    </div>
+    <div class="qa-a">
+      <p>카카오 API만 쓰면 서비스 고유 데이터(리뷰 요약·태그·평점)가 없고, DB만 쓰면 카카오에 있는 신규 카페가 누락됩니다. <span class="point">두 데이터를 이름 기준으로 병합</span>해서 DB에 있으면 내부 데이터를, 없으면 카카오 데이터를 보여줍니다. 신규 카페는 @Async로 백그라운드에서 DB에 저장해 다음 검색부터 내부 데이터를 활용합니다.</p>
+    </div>
+  </div>
+
+  <div class="qa-item">
+    <div class="qa-q" onclick="toggle(this)">
+      <span><span class="tag badge-green badge">카카오</span> @Async로 비동기 저장한 이유가 뭔가요?</span>
+      <span class="qa-arrow">▶</span>
+    </div>
+    <div class="qa-a">
+      <p>검색 요청마다 신규 카페를 동기로 DB에 저장하면 응답 지연이 생깁니다. 사용자 입장에서는 저장 완료를 기다릴 필요가 없으니 <span class="point">@Async로 별도 스레드에서 처리해 응답 속도를 개선</span>했습니다. 주의할 점은 @Async는 프록시를 통해야 동작하므로 반드시 public 메서드로 분리해야 합니다. 또한 @Transactional과 함께 써서 저장 실패 시 롤백됩니다.</p>
+    </div>
+  </div>
+
+  <div class="qa-item">
+    <div class="qa-q" onclick="toggle(this)">
+      <span><span class="tag badge-yellow badge">성능</span> N+1 문제를 어떻게 해결했나요?</span>
+      <span class="qa-arrow">▶</span>
+    </div>
+    <div class="qa-a">
+      <p>카페 목록 100개에서 각각 태그를 조회하면 101번 쿼리가 발생합니다. <span class="point">findTagNamesByCafeIds(cafeIds)로 IN 절 배치 조회</span>를 사용하고 결과를 Map&lt;Long, List&lt;String&gt;&gt;으로 변환해 카페별로 매핑했습니다. 리뷰도 getReviewsByCafeIds(cafeIds)로 동일하게 처리했습니다. 검색 목록에서는 리뷰를 빈 배열로 반환해 불필요한 조회를 차단했습니다.</p>
+    </div>
+  </div>
+
+  <div class="qa-item">
+    <div class="qa-q" onclick="toggle(this)">
+      <span><span class="tag badge-orange badge">설계</span> Soft Delete를 적용한 이유가 뭔가요?</span>
+      <span class="qa-arrow">▶</span>
+    </div>
+    <div class="qa-a">
+      <p>사용자 데이터를 물리적으로 삭제하면 해당 유저가 작성한 리뷰·게시글과의 관계가 끊어져 <span class="point">데이터 정합성이 깨집니다.</span> Hibernate의 @SQLDelete와 @Where를 사용해 deleted_at 컬럼으로 논리 삭제를 구현했습니다. 탈퇴한 사용자는 닉네임을 '탈퇴회원'으로 변경해 게시글/댓글에서 표시할 수 있게 했습니다. 쿼리에서는 @Where로 자동 필터링되어 탈퇴 유저가 조회되지 않습니다.</p>
+    </div>
+  </div>
+
+  <div class="qa-item">
+    <div class="qa-q" onclick="toggle(this)">
+      <span><span class="tag badge-orange badge">설계</span> BCrypt를 선택한 이유는요?</span>
+      <span class="qa-arrow">▶</span>
+    </div>
+    <div class="qa-a">
+      <p>BCrypt는 <span class="point">단방향 해시 + salt 자동 적용</span>으로 같은 비밀번호도 매번 다른 해시값이 나와 Rainbow Table 공격을 방어합니다. work factor를 조절해 연산 비용을 높일 수 있습니다. Spring Security가 기본으로 제공하는 PasswordEncoder여서 matches() 메서드로 쉽게 검증할 수 있습니다.</p>
+    </div>
+  </div>
+
+  <div class="qa-item">
+    <div class="qa-q" onclick="toggle(this)">
+      <span><span class="tag badge-purple badge">DB</span> ST_Distance_Sphere를 사용한 이유는요?</span>
+      <span class="qa-arrow">▶</span>
+    </div>
+    <div class="qa-a">
+      <p>위도/경도 좌표 간 거리를 평면 거리 공식으로 계산하면 지구의 곡률이 고려되지 않아 오차가 생깁니다. <span class="point">MySQL의 ST_Distance_Sphere()는 하버사인 공식 기반으로 지구 구면 거리를 정확하게 계산</span>합니다. 반경 검색 특성상 인덱스 활용이 어렵지만 LIMIT 100으로 결과를 제한해 성능을 보완했습니다. DB 결과가 10개 미만이면 카카오 Category API로 보완합니다.</p>
+    </div>
+  </div>
+
+  <div class="qa-item">
+    <div class="qa-q" onclick="toggle(this)">
+      <span><span class="tag badge-purple badge">DB</span> em.getReference()를 쓴 이유가 뭔가요?</span>
+      <span class="qa-arrow">▶</span>
+    </div>
+    <div class="qa-a">
+      <p>위시리스트 토글 시 CafeEntity의 실제 데이터는 필요 없고 FK 참조만 있으면 됩니다. <span class="point">em.getReference()는 프록시 객체만 생성하고 실제 DB 조회를 하지 않아 불필요한 SELECT 쿼리를 줄일 수 있습니다.</span> 단 존재하지 않는 cafeId를 넘기면 나중에 DataIntegrityViolationException이 발생하므로 이를 catch해서 처리했습니다.</p>
+    </div>
+  </div>
+
+  <div class="qa-item">
+    <div class="qa-q" onclick="toggle(this)">
+      <span><span class="tag badge-red badge">개선</span> 개선하고 싶은 점이 있나요?</span>
+      <span class="qa-arrow">▶</span>
+    </div>
+    <div class="qa-a">
+      <p>세 가지를 개선하고 싶습니다. 첫째, <span class="point">임시 비밀번호 방식 → 일회용 링크 방식</span>으로 변경 (UUID 토큰 + 만료시간 저장). 둘째, 카페 상세 조회 시마다 UPDATE 쿼리가 발생하는 조회수 증가를 <span class="point">Redis로 비동기 집계</span>하면 성능이 개선됩니다. 셋째, 소셜 로그인(Google, Kakao)을 OAuth2로 구현하지 못했는데 Spring Security OAuth2를 활용해 추가할 수 있습니다.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+</div>
+
+<script>
+function toggle(el) {
+  const answer = el.nextElementSibling;
+  const arrow = el.querySelector('.qa-arrow');
+  answer.classList.toggle('open');
+  arrow.classList.toggle('open');
+}
+
+// 스크롤 시 네비 활성화
+const sections = document.querySelectorAll('section[id]');
+const links = document.querySelectorAll('nav a');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => {
+    if (window.scrollY >= s.offsetTop - 60) current = s.id;
+  });
+  links.forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+  });
+});
+</script>
+</body>
+</html>
