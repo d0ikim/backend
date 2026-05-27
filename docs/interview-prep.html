@@ -216,15 +216,35 @@ pre {
 .info     { background: rgba(96,165,250,.07);  border-left: 3px solid var(--blue);   padding: 10px 14px; border-radius: 0 6px 6px 0; margin: 8px 0; font-size: 13px; line-height: 1.7; }
 
 /* ═══════════════════════════════
-   반응형 — 태블릿 (≤900px)
+   반응형 — 태블릿 세로 (601~900px)
+   아이패드 portrait 등
 ══════════════════════════════════ */
 @media (max-width: 900px) {
   aside { display: none; }
   .mob-header { display: flex; }
-  main { padding: 72px 16px 32px; }
+  main { padding: 72px 20px 40px; }
   section { scroll-margin-top: calc(var(--nav-h) + 8px); }
   .grid-4 { grid-template-columns: repeat(2, 1fr); }
   .grid-3 { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* 601~900px: 아이패드 세로 폰트 확대 */
+@media (min-width: 601px) and (max-width: 900px) {
+  body          { font-size: 16px; }
+  h1            { font-size: 22px; }
+  h2.section-title { font-size: 18px; }
+  h3            { font-size: 14px; }
+  .card-value   { font-size: 16px; }
+  .card-sub     { font-size: 13px; }
+  .card-title   { font-size: 12px; }
+  table         { font-size: 14px; }
+  td, th        { padding: 9px 11px; }
+  pre           { font-size: 13px; }
+  .flow-step    { font-size: 13px; padding: 6px 11px; }
+  .qa-q         { font-size: 15px; padding: 16px; }
+  .qa-a p       { font-size: 15px; }
+  .tip, .info, .warn-box { font-size: 14px; }
+  .badge        { font-size: 12px; padding: 3px 9px; }
 }
 
 /* ═══════════════════════════════
@@ -254,12 +274,28 @@ pre {
 }
 
 /* ═══════════════════════════════
-   아이패드 Pro 가로 (1024px)
+   아이패드 가로 / 소형 노트북
+   901~1300px
 ══════════════════════════════════ */
-@media (min-width: 901px) and (max-width: 1100px) {
-  aside { width: 190px; }
-  main { padding: 28px 20px; }
-  .grid-4 { grid-template-columns: repeat(2, 1fr); }
+@media (min-width: 901px) and (max-width: 1300px) {
+  aside         { width: 200px; }
+  main          { padding: 32px 28px; }
+  body          { font-size: 16px; }
+  h1            { font-size: 24px; }
+  h2.section-title { font-size: 19px; }
+  h3            { font-size: 14px; }
+  .card-value   { font-size: 16px; }
+  .card-sub     { font-size: 13px; }
+  aside a       { font-size: 14px; padding: 9px 16px; }
+  table         { font-size: 14px; }
+  td, th        { padding: 9px 11px; }
+  pre           { font-size: 13px; }
+  .flow-step    { font-size: 13px; padding: 6px 11px; }
+  .qa-q         { font-size: 15px; padding: 16px; }
+  .qa-a p       { font-size: 15px; line-height: 1.9; }
+  .tip, .info, .warn-box { font-size: 14px; line-height: 1.8; }
+  .badge        { font-size: 12px; padding: 3px 9px; }
+  .grid-4       { grid-template-columns: repeat(2, 1fr); }
 }
 </style>
 </head>
