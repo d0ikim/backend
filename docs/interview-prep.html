@@ -25,7 +25,7 @@
 /* ── 리셋 ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
-body { background: var(--bg); color: var(--text); font-family: -apple-system, 'Segoe UI', sans-serif; font-size: 15px; line-height: 1.65; -webkit-text-size-adjust: 100%; }
+body { background: var(--bg); color: var(--text); font-family: -apple-system, 'Segoe UI', sans-serif; font-size: 17px; line-height: 1.7; -webkit-text-size-adjust: 100%; }
 
 /* ═══════════════════════════════
    모바일 상단 헤더 (항상 고정)
@@ -104,14 +104,14 @@ main { flex: 1; padding: 32px; min-width: 0; }
    공통 타이포그래피
 ══════════════════════════════════ */
 section { margin-bottom: 48px; scroll-margin-top: 16px; }
-h1 { font-size: 22px; color: var(--blue); margin-bottom: 6px; }
+h1 { font-size: 26px; color: var(--blue); margin-bottom: 6px; }
 h2.section-title {
-  font-size: 17px; color: var(--text); margin-bottom: 14px;
+  font-size: 20px; color: var(--text); margin-bottom: 14px;
   padding-bottom: 8px; border-bottom: 1px solid var(--border);
   display: flex; align-items: center; gap: 8px;
 }
-h3 { font-size: 13px; color: var(--yellow); margin: 16px 0 8px; text-transform: uppercase; letter-spacing: .4px; }
-.subtitle { color: var(--muted); font-size: 13px; margin-bottom: 20px; }
+h3 { font-size: 15px; color: var(--yellow); margin: 16px 0 8px; text-transform: uppercase; letter-spacing: .4px; }
+.subtitle { color: var(--muted); font-size: 15px; margin-bottom: 20px; }
 
 /* ═══════════════════════════════
    그리드 카드
@@ -122,14 +122,14 @@ h3 { font-size: 13px; color: var(--yellow); margin: 16px 0 8px; text-transform: 
 .grid-4 { grid-template-columns: repeat(4, 1fr); }
 
 .card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px; }
-.card-title { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 5px; }
-.card-value { font-size: 15px; color: var(--text); font-weight: 700; }
-.card-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
+.card-title { font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 5px; }
+.card-value { font-size: 18px; color: var(--text); font-weight: 700; }
+.card-sub { font-size: 14px; color: var(--muted); margin-top: 4px; }
 
 /* ═══════════════════════════════
    배지
 ══════════════════════════════════ */
-.badge { display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+.badge { display: inline-block; padding: 3px 9px; border-radius: 4px; font-size: 13px; font-weight: 600; white-space: nowrap; }
 .badge-blue   { background: rgba(96,165,250,.15); color: var(--blue); }
 .badge-green  { background: rgba(52,211,153,.15);  color: var(--green); }
 .badge-yellow { background: rgba(251,191,36,.15);  color: var(--yellow); }
@@ -141,17 +141,17 @@ h3 { font-size: 13px; color: var(--yellow); margin: 16px 0 8px; text-transform: 
    테이블 (모바일: 가로 스크롤)
 ══════════════════════════════════ */
 .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 8px; }
-table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 480px; }
+table { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 480px; }
 th {
   background: var(--surface2); color: var(--muted); font-weight: 600;
-  text-align: left; padding: 8px 10px; border: 1px solid var(--border);
-  font-size: 11px; text-transform: uppercase; white-space: nowrap;
+  text-align: left; padding: 10px 12px; border: 1px solid var(--border);
+  font-size: 13px; text-transform: uppercase; white-space: nowrap;
 }
-td { padding: 8px 10px; border: 1px solid var(--border); color: var(--text); vertical-align: top; }
+td { padding: 10px 12px; border: 1px solid var(--border); color: var(--text); vertical-align: top; }
 tr:nth-child(even) td { background: rgba(255,255,255,.02); }
 td code {
-  background: var(--surface2); padding: 1px 5px; border-radius: 3px;
-  font-family: 'Consolas', monospace; font-size: 12px; color: var(--teal);
+  background: var(--surface2); padding: 2px 6px; border-radius: 3px;
+  font-family: 'Consolas', monospace; font-size: 14px; color: var(--teal);
   white-space: nowrap;
 }
 
@@ -160,8 +160,8 @@ td code {
 ══════════════════════════════════ */
 pre {
   background: var(--surface2); border: 1px solid var(--border); border-radius: 6px;
-  padding: 12px; overflow-x: auto; -webkit-overflow-scrolling: touch;
-  font-family: 'Consolas', monospace; font-size: 12px; line-height: 1.7;
+  padding: 14px; overflow-x: auto; -webkit-overflow-scrolling: touch;
+  font-family: 'Consolas', monospace; font-size: 14px; line-height: 1.75;
   color: #abb2bf; margin: 8px 0;
   white-space: pre; word-break: normal;
 }
@@ -185,8 +185,8 @@ pre {
 .qa-q:active { background: var(--surface2); }
 .qa-q-left { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .qa-a { background: var(--surface2); max-height: 0; overflow: hidden; transition: max-height .3s ease, padding .3s ease; }
-.qa-a.open { max-height: 800px; padding: 14px 16px; }
-.qa-a p { color: var(--muted); line-height: 1.85; font-size: 14px; }
+.qa-a.open { max-height: 800px; padding: 16px 18px; }
+.qa-a p { color: var(--muted); line-height: 1.9; font-size: 16px; }
 .qa-a .point { color: var(--green); font-weight: 700; }
 .qa-arrow { color: var(--muted); font-size: 12px; transition: transform .2s; flex-shrink: 0; }
 .qa-arrow.open { transform: rotate(90deg); }
@@ -201,7 +201,7 @@ pre {
 }
 .flow-step {
   background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
-  padding: 5px 10px; font-size: 12px; color: var(--text); white-space: nowrap;
+  padding: 6px 12px; font-size: 14px; color: var(--text); white-space: nowrap;
 }
 .flow-step.highlight { border-color: var(--blue); color: var(--blue); }
 .flow-step.success   { border-color: var(--green); color: var(--green); }
@@ -211,9 +211,9 @@ pre {
 /* ═══════════════════════════════
    알림 박스
 ══════════════════════════════════ */
-.tip      { background: rgba(52,211,153,.07); border-left: 3px solid var(--green);  padding: 10px 14px; border-radius: 0 6px 6px 0; margin: 8px 0; font-size: 13px; line-height: 1.7; }
-.warn-box { background: rgba(251,191,36,.07);  border-left: 3px solid var(--yellow); padding: 10px 14px; border-radius: 0 6px 6px 0; margin: 8px 0; font-size: 13px; }
-.info     { background: rgba(96,165,250,.07);  border-left: 3px solid var(--blue);   padding: 10px 14px; border-radius: 0 6px 6px 0; margin: 8px 0; font-size: 13px; line-height: 1.7; }
+.tip      { background: rgba(52,211,153,.07); border-left: 3px solid var(--green);  padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 8px 0; font-size: 15px; line-height: 1.75; }
+.warn-box { background: rgba(251,191,36,.07);  border-left: 3px solid var(--yellow); padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 8px 0; font-size: 15px; }
+.info     { background: rgba(96,165,250,.07);  border-left: 3px solid var(--blue);   padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 8px 0; font-size: 15px; line-height: 1.75; }
 
 /* ═══════════════════════════════
    반응형 — 태블릿 세로 (601~900px)
@@ -230,47 +230,57 @@ pre {
 
 /* 601~900px: 아이패드 세로 폰트 확대 */
 @media (min-width: 601px) and (max-width: 900px) {
-  body          { font-size: 16px; }
-  h1            { font-size: 22px; }
-  h2.section-title { font-size: 18px; }
-  h3            { font-size: 14px; }
-  .card-value   { font-size: 16px; }
-  .card-sub     { font-size: 13px; }
-  .card-title   { font-size: 12px; }
-  table         { font-size: 14px; }
-  td, th        { padding: 9px 11px; }
-  pre           { font-size: 13px; }
-  .flow-step    { font-size: 13px; padding: 6px 11px; }
-  .qa-q         { font-size: 15px; padding: 16px; }
-  .qa-a p       { font-size: 15px; }
-  .tip, .info, .warn-box { font-size: 14px; }
-  .badge        { font-size: 12px; padding: 3px 9px; }
+  body          { font-size: 19px; }
+  h1            { font-size: 26px; }
+  h2.section-title { font-size: 22px; }
+  h3            { font-size: 16px; }
+  .card-value   { font-size: 20px; }
+  .card-sub     { font-size: 15px; }
+  .card-title   { font-size: 13px; }
+  table         { font-size: 16px; }
+  td, th        { padding: 11px 13px; }
+  th            { font-size: 14px; }
+  pre           { font-size: 15px; }
+  .flow-step    { font-size: 15px; padding: 7px 13px; }
+  .qa-q         { font-size: 17px; padding: 18px; }
+  .qa-a p       { font-size: 17px; }
+  .tip, .info, .warn-box { font-size: 16px; }
+  .badge        { font-size: 14px; padding: 4px 10px; }
+  .subtitle     { font-size: 16px; }
 }
 
 /* ═══════════════════════════════
    반응형 — 모바일 (≤600px)
 ══════════════════════════════════ */
 @media (max-width: 600px) {
-  body { font-size: 14px; }
-  main { padding: 64px 12px 40px; }
-  h1 { font-size: 18px; }
-  h2.section-title { font-size: 15px; }
+  body { font-size: 16px; }
+  main { padding: 64px 14px 40px; }
+  h1 { font-size: 22px; }
+  h2.section-title { font-size: 18px; }
+  h3 { font-size: 14px; }
+  .subtitle { font-size: 14px; }
 
   .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
 
-  pre { font-size: 11px; padding: 10px; }
-  table { font-size: 12px; min-width: 420px; }
-  td, th { padding: 7px 8px; }
+  pre { font-size: 13px; padding: 12px; }
+  table { font-size: 14px; min-width: 420px; }
+  td, th { padding: 9px 10px; }
+  th { font-size: 12px; }
+  td code { font-size: 13px; }
 
-  .flow { padding: 10px; gap: 3px; }
-  .flow-step { font-size: 11px; padding: 4px 8px; }
+  .flow { padding: 10px; gap: 4px; }
+  .flow-step { font-size: 13px; padding: 5px 10px; }
 
-  .qa-q { padding: 13px 12px; font-size: 14px; }
-  .qa-a.open { padding: 12px; }
-  .qa-a p { font-size: 13px; }
+  .qa-q { padding: 15px 14px; font-size: 15px; }
+  .qa-a.open { padding: 14px; }
+  .qa-a p { font-size: 15px; }
 
-  .card { padding: 12px; }
-  .card-value { font-size: 14px; }
+  .card { padding: 14px; }
+  .card-value { font-size: 17px; }
+  .card-sub { font-size: 13px; }
+  .card-title { font-size: 12px; }
+  .badge { font-size: 12px; padding: 3px 8px; }
+  .tip, .info, .warn-box { font-size: 14px; }
 }
 
 /* ═══════════════════════════════
@@ -278,23 +288,28 @@ pre {
    901~1300px
 ══════════════════════════════════ */
 @media (min-width: 901px) and (max-width: 1300px) {
-  aside         { width: 200px; }
-  main          { padding: 32px 28px; }
-  body          { font-size: 16px; }
-  h1            { font-size: 24px; }
-  h2.section-title { font-size: 19px; }
-  h3            { font-size: 14px; }
-  .card-value   { font-size: 16px; }
-  .card-sub     { font-size: 13px; }
-  aside a       { font-size: 14px; padding: 9px 16px; }
-  table         { font-size: 14px; }
-  td, th        { padding: 9px 11px; }
-  pre           { font-size: 13px; }
-  .flow-step    { font-size: 13px; padding: 6px 11px; }
-  .qa-q         { font-size: 15px; padding: 16px; }
-  .qa-a p       { font-size: 15px; line-height: 1.9; }
-  .tip, .info, .warn-box { font-size: 14px; line-height: 1.8; }
-  .badge        { font-size: 12px; padding: 3px 9px; }
+  aside         { width: 210px; }
+  main          { padding: 32px 32px; }
+  body          { font-size: 19px; }
+  h1            { font-size: 28px; }
+  h2.section-title { font-size: 22px; }
+  h3            { font-size: 16px; }
+  .card-value   { font-size: 20px; }
+  .card-sub     { font-size: 15px; }
+  .card-title   { font-size: 13px; }
+  aside a       { font-size: 15px; padding: 10px 16px; }
+  aside h2      { font-size: 12px; }
+  table         { font-size: 16px; }
+  td, th        { padding: 11px 13px; }
+  th            { font-size: 14px; }
+  td code       { font-size: 15px; }
+  pre           { font-size: 15px; }
+  .flow-step    { font-size: 15px; padding: 7px 13px; }
+  .qa-q         { font-size: 17px; padding: 18px; }
+  .qa-a p       { font-size: 17px; line-height: 1.9; }
+  .tip, .info, .warn-box { font-size: 16px; line-height: 1.8; }
+  .badge        { font-size: 14px; padding: 4px 10px; }
+  .subtitle     { font-size: 16px; }
   .grid-4       { grid-template-columns: repeat(2, 1fr); }
 }
 </style>
