@@ -1197,6 +1197,15 @@ softDelete() 시:
 </div>
 
 <script>
+// Q&A 번호 자동 부여
+document.querySelectorAll('.qa-item').forEach((item, i) => {
+  const left = item.querySelector('.qa-q-left');
+  const num = document.createElement('span');
+  num.style.cssText = 'color:var(--muted);font-size:12px;font-weight:600;min-width:26px;flex-shrink:0;';
+  num.textContent = `Q${i + 1}.`;
+  left.insertBefore(num, left.firstChild);
+});
+
 // Q&A 토글
 function toggle(el) {
   const answer = el.nextElementSibling;
